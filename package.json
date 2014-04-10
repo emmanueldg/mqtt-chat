@@ -1,0 +1,16 @@
+{
+  "name": "MQTT-Chat",
+  "description": "A MQTT chat application using mosca and MongoDB",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "express": "3.5.1",
+     "mosca": "0.18.0",
+     "mows": "*",
+     "mongoose": "*",
+     "mqtt": "*"
+  }
+}
