@@ -14,7 +14,7 @@
 <h2>Configuration</h2>
 <p>For the mosca broker configuration. Please refer to the mosca Github page <a href="https://github.com/mcollina/mosca">https://github.com/mcollina/mosca</a> . </p>
 <h2>To run</h2>
-<pre><code class="lang-sh">node app.server</code></pre>
+<pre><code class="lang-sh">node app.js</code></pre>
 <h2>Live Demo</h2>
 <p><a href="http://mqttdemochat.cloudapp.net/">Live Demo</a></p>
 <h2>License</h2>
