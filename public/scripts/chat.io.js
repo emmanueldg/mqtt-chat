@@ -36,6 +36,11 @@
                 '<li class="cf">',
                 '<div class="fl sender">${sender}: </div><div class="fl text">${text}</div><div class="fr time">${time}</div>',
                 '</li>'
+            ].join(""),
+            image: [
+                '<li class="cf">',
+                '<div class="fl sender">${sender}: </div><div class="fl image"><canvas style="margin-left: 100px" class="img_uploaded"></canvas></div><div class="fr time">${time}</div>',
+                '</li>'
             ].join("")
         };
 
@@ -45,6 +50,14 @@
         $('.chat-input input').on('keydown', function(e){
             var key = e.which || e.keyCode;
             if(key == 13) { handleMessage(); }
+        });
+
+        $('.chat-upload input').on('change', function(){
+            var uploadedFiles = this.files;
+            handlePictureUpload(uploadedFiles, function() {
+                this.files = undefined;
+            });
+
         });
 
         $('.chat-submit button').on('click', function(){
@@ -210,6 +223,23 @@
         }
     }
 
+    function handlePictureUpload(files, callback) {
+
+            for(var i = 0; i < files.length; i++) {
+                // send the message to the server with the room name
+                var reader = new FileReader();
+                reader.onloadend = function(evt) {
+
+                    var msg = new Messaging.Message(JSON.stringify({nickname: nickname, message: evt.target.result, type: 'image'}));
+                    msg.destinationName = currentRoom;
+                    mqttClient.send(msg);
+                };
+
+                reader.readAsDataURL(files[i]);
+            }
+
+            callback();
+    }
     // insert a message to the chat window, this function can be
     // called with some flags
     function insertMessage(sender, message, showTime, isMe, isServer){
@@ -234,6 +264,36 @@
         $('.chat-messages').animate({ scrollTop: $('.chat-messages ul').height() }, 100);
     }
 
+    function insertImage(sender, message, showTime, isMe, isServer){
+        var $html = $.tmpl(tmplt.image, {
+            sender: sender,
+            time: showTime ? getTime() : ''
+        });
+
+        //$('.image').each(function(index, element) {
+        var img = new Image();
+        var canvas = $html.find('.img_uploaded')[0];
+        var context = canvas.getContext('2d');
+        img.src= message;
+        img.onload = function() {
+            context.drawImage(img,0,0,200,180);
+
+        }
+
+        // if isMe is true, mark this message so we can
+        // know that this is our message in the chat window
+        if(isMe){
+            $html.addClass('marker');
+        }
+
+        // if isServer is true, mark this message as a server
+        // message
+        if(isServer){
+            $html.find('.sender').css('color', serverDisplayColor);
+        }
+        $html.appendTo('.chat-messages ul');
+        $('.chat-messages').animate({ scrollTop: $('.chat-messages ul').height() }, 100);
+    }
     // return a short time format for the messages
     function getTime(){
         var date = new Date();
@@ -331,8 +391,12 @@
             }
         } else {
             // send the message to the server with the room name
+            if(msg.type === 'image') {
+                insertImage(msg.nickname, msg.message,true,  msg.nickname == nickname, false);
+            } else {
+                insertMessage(msg.nickname, msg.message,true,  msg.nickname == nickname, false);
+            }
 
-            insertMessage(msg.nickname, msg.message,true,  msg.nickname == nickname, false);
         }
 
     }

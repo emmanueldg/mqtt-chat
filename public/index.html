@@ -45,8 +45,14 @@
 					</div>
 					<div class="cf chat-bottom">
 						<div class="fl chat-input">
-							<input type="text" placeholder="compose message..." />
+                            <input type="text" placeholder="compose message..." />
 						</div>
+                        <div class="fl chat-upload">
+                            <label for="file-input" style="display: block; margin-top: 15px">
+                                <img src="images/cam32.png" style="display: block; margin: auto"/>
+                            </label>
+                            <input id="file-input" style="display: none;" type="file" name="attachment[]" multiple="1" accept="image/*">
+                        </div>
 						<div class="fl chat-submit">
 							<button>Send &rarr;</button>
 						</div>

@@ -17,5 +17,8 @@
 <pre><code class="lang-sh">node app.js</code></pre>
 <h2>Live Demo</h2>
 <p><a href="http://mqttdemochat.cloudapp.net/">Live Demo</a></p>
+<h2>Upcoming Features</h2>
+<li>Password Protected Room</li>
+<li>Private Chat</li>
 <h2>License</h2>
 <p>MIT</p>
