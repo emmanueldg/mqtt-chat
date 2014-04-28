@@ -19,7 +19,7 @@
 <p><a href="http://mqttdemochat.cloudapp.net/">Live Demo</a></p>
 <h2>Upcoming Features</h2>
 <ul>
-<li>Password Protected Room</li>
+<li>Password Protected Rooms</li>
 <li>Private Chat</li>
 </ul>
 <h2>License</h2>
