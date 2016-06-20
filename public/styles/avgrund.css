@@ -68,30 +68,35 @@
 	     -o-transform: scale( 0.8 );
 	        transform: scale( 0.8 );
 }
-	.avgrund-active .avgrund-popup-animate {
-		visibility: visible;
-		opacity: 1;
 
-		-webkit-transform: scale( 1.1 );
-		   -moz-transform: scale( 1.1 );
-		    -ms-transform: scale( 1.1 );
-		     -o-transform: scale( 1.1 );
-		        transform: scale( 1.1 );
-	}
-	.avgrund-popup.stack {
-		-webkit-transform: scale( 1.5 );
-		   -moz-transform: scale( 1.5 );
-		    -ms-transform: scale( 1.5 );
-		     -o-transform: scale( 1.5 );
-		        transform: scale( 1.5 );
-	}
-	.avgrund-active .avgrund-popup.stack {
-		-webkit-transform: scale( 1.1 );
-		   -moz-transform: scale( 1.1 );
-		    -ms-transform: scale( 1.1 );
-		     -o-transform: scale( 1.1 );
-		        transform: scale( 1.1 );
-	}
+.avgrund-popup-room{
+	height: 200px;
+}
+
+.avgrund-active .avgrund-popup-animate {
+	visibility: visible;
+	opacity: 1;
+
+	-webkit-transform: scale( 1.1 );
+	   -moz-transform: scale( 1.1 );
+		-ms-transform: scale( 1.1 );
+		 -o-transform: scale( 1.1 );
+			transform: scale( 1.1 );
+}
+.avgrund-popup.stack {
+	-webkit-transform: scale( 1.5 );
+	   -moz-transform: scale( 1.5 );
+		-ms-transform: scale( 1.5 );
+		 -o-transform: scale( 1.5 );
+			transform: scale( 1.5 );
+}
+.avgrund-active .avgrund-popup.stack {
+	-webkit-transform: scale( 1.1 );
+	   -moz-transform: scale( 1.1 );
+		-ms-transform: scale( 1.1 );
+		 -o-transform: scale( 1.1 );
+			transform: scale( 1.1 );
+}
 
 
 .avgrund-ready body,

@@ -19,7 +19,6 @@
 <p><a href="http://aviz.co">Live Demo</a></p>
 <h2>Upcoming Features</h2>
 <ul>
-<li>Password Protected Rooms</li>
 <li>Private Chat</li>
 </ul>
 <h2>License</h2>

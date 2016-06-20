@@ -207,11 +207,11 @@ filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,StartColorStr=
 
 .popup{}
 .popup .title{font-size:24px;}
-.popup .content{color:#666;}
+.popup .content{color:#667;}
 .popup .input{margin:15px 0;}
-.popup .input input[type="text"]{font-family: 'Lato', sans-serif;padding:16px 10px;border:none;background:rgba(0, 0, 0, 0.02);box-shadow:inset 0 1px 1px #ccc;color:#4D4D4D;font-size:24px;border:solid 1px #ccc;border-radius:5px;}
-.popup .input input[type="text"]::-webkit-input-placeholder{color:#ccc;font-style:italic;}
-.popup .input input[type="text"].yellow::-webkit-input-placeholder{color:#eeb654;}
+.popup .input input[type="text"], input[type=password]{font-family: 'Lato', sans-serif;padding:16px 10px;border:none;background:rgba(0, 0, 0, 0.02);box-shadow:inset 0 1px 1px #ccc;color:#4D4D4D;font-size:24px;border:solid 1px #ccc;border-radius:5px;}
+.popup .input input[type="text"]::-webkit-input-placeholder{color:#ccc;font-style:italic;}input[type=password]::-webkit-input-placeholder{color:#ccc;font-style:italic;}
+.popup .input input[type="text"].yellow::-webkit-input-placeholder{color:#eeb654;} input[type=password].yellow::-webkit-input-placeholder{color:#eeb654;}
 
 .popup .input input:focus{outline:none;}
 footer{position:fixed;bottom:0;left:0;padding:10px;width:100%;background:rgba(0,0,0,0.3);text-align:left;}

@@ -68,11 +68,19 @@
 			<div class="input"><input type="text" maxlength="15" placeholder="nickname..." /></div>
 			<div class="big-button-green small begin">&mdash; Begin &mdash;</div>
 		</aside>
-		<aside id="addroom-popup" class="popup animate avgrund-popup">
+		<aside id="addroom-popup" class="popup animate avgrund-popup avgrund-popup-room">
 			<div class="title">Enter a room name</div>
 			<div class="content">Room name up to 10 characters</div>
 			<div class="input"><input type="text" maxlength="10" placeholder="room name..." /></div>
+			<div class="input"><input type="checkbox" id="passwordProtection" onclick="togglePasswordField(this)"> Add password</div>
+			<div class="input"><input id="password" type="password" maxlength="20" placeholder="password" style="display: none;"/></div>
 			<div class="big-button-green small create">Create &rarr;</div>
+		</aside>
+		<aside id="password-popup" class="popup animate avgrund-popup">
+			<div style="display: none;" class="room-name"></div>
+			<div class="popup-title"></div>
+			<div class="input"><input type="password" maxlength="20" placeholder="password" /></div>
+			<div class="big-button-green small join">Join</div>
 		</aside>
 		<div class="avgrund-cover"></div>
 
@@ -111,6 +119,16 @@
 			}
 			
 		});
+		function togglePasswordField(input){
+			var $input = $(input);
+			if ($input.prop('checked')){
+				$('.avgrund-popup-room').height(300);
+				$('#password').show();
+			} else {
+				$('#password').hide();
+				$('.avgrund-popup-room').height(200);
+			}
+		}
 		</script>
 		
 	</body>
