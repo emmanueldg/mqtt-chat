@@ -19,6 +19,5 @@ docs
 mosquitto.db
 *rdb
 coverage/
-public/*
 data/
 .idea/
