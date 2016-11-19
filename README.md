@@ -16,7 +16,7 @@
 <h2>To run</h2>
 <pre><code class="lang-sh">node app.js</code></pre>
 <h2>Live Demo</h2>
-<p><a href="http://aviz.co">Live Demo</a></p>
+<p><a href="http://ec2-52-33-112-136.us-west-2.compute.amazonaws.com">Live Demo</a></p>
 <h2>Upcoming Features</h2>
 <ul>
 <li>Private Chat</li>
