@@ -14,6 +14,7 @@
         serverAddress = 'localhost',
         serverDisplayName = 'MQTT Chat Server',
         serverDisplayColor = '#1c5380',
+        reconnectTimeout = 3000,
         keywordRoomNames = ['addroom', 'removeroom', 'totalrooms', 'totalclients', 'online', 'offline'],
 
         tmplt = {
@@ -333,11 +334,37 @@
         }
     }
 
+    function showReconnectMessage(){
+        var message = 'connection to server lost. Attempting to reconnect in ' + reconnectTimeout + ' ms';
+        var $html = $.tmpl(tmplt.message, {
+            text: message,
+            time: getTime()
+        });
+        $html.find('.text').css('color', '#ff0000');
+        $html.find('.sender').remove();
+        $html.appendTo('.chat-messages ul');
+        $('.chat-messages').animate({ scrollTop: $('.chat-messages ul').height() }, 100);
+    }
+
     function connect(){
         $('.chat-shadow .content').html('Connecting...');
         mqttClient = new Messaging.Client(serverAddress, 1884, nickname);
-        mqttClient.connect({onSuccess:onConnect, keepAliveInterval: 0});
+        var connectionOptions = {
+            keepAliveInterval: 0,
+            onSuccess: onConnect,
+            onFailure: function(message){
+                console.log('connection failed: ' + message.errorMessage);
+                showReconnectMessage();
+                setTimeout(connect, reconnectTimeout);
+            }
+        };
+        mqttClient.connect(connectionOptions);
         mqttClient.onMessageArrived = onMessageArrived;
+        mqttClient.onConnectionLost = onConnectionLost;
+    }
+
+    function onConnectionLost(response) {
+        setTimeout(connect, reconnectTimeout);
     }
 
     function onConnect() {
@@ -347,13 +374,13 @@
         });
         currentRoom = 'Lobby';
         isRoomProtected = false;
-        mqttClient.subscribe(currentRoom);
         mqttClient.subscribe('addroom');
         mqttClient.subscribe('removeroom');
         mqttClient.subscribe('totalrooms');
         mqttClient.subscribe('totalclients');
         mqttClient.subscribe('online');
         mqttClient.subscribe('offline');
+        mqttClient.subscribe(currentRoom);
         initRoom(currentRoom);
     };
 
