@@ -1,10 +1,9 @@
-
 var express = require('express');
 var app	= express();
 var mosca = require('mosca');
 var mqtt = require('mqtt');
 var bodyParser = require('body-parser');
-var bcrypt = require('bcrypt');
+var bcrypt = require('bcryptjs');
 var server = require('http').createServer(app);
 var mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
@@ -16,7 +15,7 @@ var topicKeywords = ['addroom', 'removeroom', 'totalrooms', 'totalclients', 'onl
 server.listen(port);
 
 //Mongoose Configurations
-mongoose.connect('mongodb://localhost:27017/mqtt-chat');
+mongoose.connect('mongodb://localhost:27017/mqtt-chat', {useNewUrlParser: true, useUnifiedTopology: true });
 
 app.use("/styles", express.static(__dirname + '/public/styles'));
 app.use("/scripts", express.static(__dirname + '/public/scripts'));
@@ -34,29 +33,29 @@ app.post('/setPassword', function(req, res){
     var room = req.body.room;
     var password = req.body.password;
     var hashPassword = bcrypt.hashSync(password, 10);
-    Room.update({_id: room}, {$set: {password: hashPassword, protected: true}}, {upsert: true})
-    .then(function(doc){
-        res.sendStatus(200);
-    })
-    .catch(function(err){
-        res.sendStatus(500);
-    });
+    Room.updateOne({_id: room}, {$set: {password: hashPassword, protected: true}}, {upsert: true})
+        .then(function(doc){
+            res.sendStatus(200);
+        })
+        .catch(function(err){
+            res.sendStatus(500);
+        });
 });
 
 app.post('/checkPassword', function(req, res){
     var room = req.body.room;
     var password = req.body.password;
     Room.findOne({_id: room})
-    .then(function(doc){
-        if(bcrypt.compareSync(password, doc.password)){
-            res.sendStatus(200);
-        }else{
+        .then(function(doc){
+            if(bcrypt.compareSync(password, doc.password)){
+                res.sendStatus(200);
+            }else{
+                res.sendStatus(401);
+            }
+        })
+        .catch(function(err){
             res.sendStatus(401);
-        }
-    })
-    .catch(function(err){
-        res.sendStatus(401);
-    });
+        });
 });
 
 //Mosca Settings
@@ -84,12 +83,12 @@ var mqttServer = new mosca.Server(settings);
 var mqttClient = mqtt.connect(wsAddress, {keepalive: 0});
 process.on('SIGINT', function(){
     mqttClient.end();
-    Room.remove({}, function(err){});
+    Room.deleteMany({}, function(err){});
 });
 
 // fired when a message is received
 mqttServer.on('published', function(packet, client) {
-   if(topicKeywords.indexOf(packet.topic) === -1 && !packet.topic.includes('$SYS')){
+    if(topicKeywords.indexOf(packet.topic) === -1 && !packet.topic.includes('$SYS')){
         var messageJson = JSON.parse(packet.payload.toString('utf-8'));
         var message = new Message({from: messageJson.nickname, content:messageJson.message, room:packet.topic, date: new Date()});
         message.save();
@@ -112,15 +111,15 @@ mqttServer.on('unsubscribed', function(topic, client) {
 
 //Chat Helper Functions
 function addRoomAndClient(topic, client) {
-    Room.update({_id: topic}, {$push: {clientIds:client.id}},{upsert:true})
-    .then(function(data){
+    Room.updateOne({_id: topic}, {$push: {clientIds:client.id}},{upsert:true})
+        .then(function(data){
             notifyTotalRooms();
             notifyTotalClients(topic);
-    });
+        });
 }
 
 function removeClientFromRoom(topic, client) {
-    Room.update({_id: topic}, {$pull: {clientIds:client.id}},{upsert:true}).then(function(doc){
+    Room.updateOne({_id: topic}, {$pull: {clientIds:client.id}},{upsert:true}).then(function(doc){
         Room.findOne({_id: topic}, '_id clientIds protected').then(function(doc){
             if(doc.clientIds.length > 0) {
                 notifyTotalRooms();
@@ -138,16 +137,16 @@ function removeClientFromRoom(topic, client) {
 
 function notifyTotalRooms() {
     Room.find({}, '_id clientIds protected')
-    .then(function(docs){
-        getMqttClient().publish('totalrooms', JSON.stringify(docs));
-    });
+        .then(function(docs){
+            getMqttClient().publish('totalrooms', JSON.stringify(docs));
+        });
 }
 
 function notifyTotalClients(topic) {
     Room.findOne({_id: topic}, '_id clientIds protected')
-    .then(function(doc){
-        getMqttClient().publish('totalclients', JSON.stringify(doc));
-    });
+        .then(function(doc){
+            getMqttClient().publish('totalclients', JSON.stringify(doc));
+        });
 }
 
 //Mosca Persistence

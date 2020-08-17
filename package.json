@@ -7,9 +7,9 @@
     "start": "node app.js"
   },
   "dependencies": {
-    "bcrypt": "^0.8.7",
-    "body-parser": "^1.15.1",
-    "express": "4.12.x",
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.0",
+    "express": "4.17.x",
     "mongoose": "*",
     "mosca": "*",
     "mqtt": "*"
